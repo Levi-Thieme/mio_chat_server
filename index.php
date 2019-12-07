@@ -79,12 +79,13 @@ class SocketServer {
 
     public function Listen() {
         error_log("Listening...\n", 3, LOG_URL);
-        define('HOST_NAME', "localhost");
-        define('PORT', "9999");
+        define('HOST_NAME', $_SERVER['HTTP_HOST']);
+        define('PORT', $_SERVER['SERVER_PORT']);
         $null = NULL;
         //serverSocket listens for and accepts any new client socket connection requests
         $serverSocket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
         socket_set_option($serverSocket, SOL_SOCKET, SO_REUSEADDR, 1);
+        error_log("Binding socket to " . HOST_NAME . ":" . PORT);
         socket_bind($serverSocket, HOST_NAME, PORT);
         socket_listen($serverSocket);
         //Enter infinite loop of receiving data from client sockets and handling new client socket connections.

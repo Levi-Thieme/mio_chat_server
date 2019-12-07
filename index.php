@@ -80,7 +80,7 @@ class SocketServer {
     public function Listen() {
         error_log("Listening...\n", 3, LOG_URL);
         define('HOST_NAME', "localhost");
-        define('PORT', "8080");
+        define('PORT', "9999");
         $null = NULL;
         //serverSocket listens for and accepts any new client socket connection requests
         $serverSocket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);

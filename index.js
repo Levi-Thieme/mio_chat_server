@@ -15,5 +15,5 @@ wss.on('connection', (ws) => {
 });
 
 setInterval(() => {
-  wss.clients.forEach((client) => client.send({ message: new Date().toTimeString() }))
+  wss.clients.forEach((client) => client.send(JSON.stringify({ message: new Date().toTimeString() })));
 }, 1000);

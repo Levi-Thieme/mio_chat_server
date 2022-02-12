@@ -1,0 +1,101 @@
+.sidebarPanel {
+    display: grid;
+    grid-template-rows: auto auto;
+    grid-template-columns: 25% 50% 25%;
+    height: auto;
+    overflow: hidden;
+    margin: 10px;
+    min-height: 40px;
+}
+
+.firstRow {
+    grid-row: 1;
+}
+
+.secondRow {
+    grid-row: 2;
+}
+
+.spanAllCols {
+    grid-column: span 3;
+}
+
+.sidebarLeft {
+    grid-column: 1;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.sidebarMiddle {
+    grid-column: 2;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.sidebarRight {
+    grid-column: 3;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.collapse {
+    margin-top: 10px;
+}
+
+.fa:hover {
+    color: #007bff;
+}
+
+.list-group-item {
+    background: #222;
+    border-color: black;
+    border-width: 1px;
+    border-radius: 0;
+}
+
+.list-group-item:hover {
+    background: #333;
+}
+
+.list-group-item.active {
+    background: #222;
+    color: #e68a00;
+    border-color: #e68a00;
+}
+
+.list-group-item.active:hover {
+    background: #222;
+    color: #e68a00;
+    border-color: #e68a00;
+}
+
+#sidebar {
+    grid-row: 1;
+    grid-column: 1;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    border-right: solid 1px #e68a00;
+    min-width: 60px;
+    max-width: 300px;
+    width: 300px;
+}
+
+#myAccountLink {
+    font-size: x-large;
+    font-family: "Courier New";
+}
+
+#hideShowDiv {
+    position: absolute;
+    right: 0;
+    margin-right: 10px;
+}
+
+#sidebarFooter {
+    margin-top: auto;
+}
+
+#signoutBtn {
+    width: 100%;
+}

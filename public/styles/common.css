@@ -1,0 +1,22 @@
+.dark {
+    background-color: #222;
+    color: #e68a00;
+}
+
+.btn-primary {
+    margin: 1% auto;
+    background-color: #f79824;
+    color: black;
+}
+
+.fa.hover {
+    cursor: hand;
+}
+
+.fa-fw {
+    float: right;
+}
+
+.body {
+   background: #222;
+}

@@ -1,10 +1,20 @@
-import express, { Request, Response } from "express";
+import express, { Application, Request, Response } from "express";
 import { Server, WebSocket } from "ws";
+import path from "path";
+
 const PORT = process.env.PORT || 3000;
 
-const server = express()
-  .use((req: Request, res: Response) => res.send("hello"))
-  .listen(PORT, () => console.log(`Listening on ${PORT}`));
+
+
+const app: Application = express()
+  .use(express.static(path.join(__dirname, './public/views')))
+  .use(express.static(path.join(__dirname, './public/styles')))
+  .use(express.static(path.join(__dirname, './public/scripts')))
+  .use(express.static(path.join(__dirname, './public/imgs')));
+
+
+const server = app.listen(PORT, () => console.log(`Listening on ${PORT}`));
+
 
 const channels = new Map<string, WebSocket[]>();
 
@@ -42,7 +52,7 @@ If the channel is not contained in the channels map, then a new channel is creat
 */
 function addClientToChannel(channelId: string, clientSocket: WebSocket) {
   if (channels.has(channelId)) {
-    const sockets: WebSocket[] = channels.get(channelId);
+    const sockets: WebSocket[] = channels.get(channelId) as WebSocket[];
     if (sockets.includes(clientSocket)) {
       return false;
     }
@@ -61,11 +71,11 @@ function addClientToChannel(channelId: string, clientSocket: WebSocket) {
 Removes a client from the specified channel.
 */
 function removeClientFromChannel(channelId: string, clientSocket: WebSocket) {
-  const channel = channels.get(channelId);
+  const channel = channels.get(channelId) as WebSocket[];
   if (channel) {
     let clientIndex = channel.findIndex(client => client == clientSocket);
     if (clientIndex > -1) {
-      channels.get(channelId).splice(clientIndex, 1);
+      channel.splice(clientIndex, 1);
     }
   }
 }
@@ -74,9 +84,12 @@ function removeClientFromChannel(channelId: string, clientSocket: WebSocket) {
 Sends a message to every client in the channel specified by channelId.
 */
 function broadcastToChannel(channelId: string, message: string, username: string) {
-  channels.get(channelId).forEach(client => {
-    client.send(JSON.stringify({ message: message, username: username, messageId: Date.now()}))
-  });
+  const channel = channels.get(channelId) as WebSocket[];
+  if (channel) {
+    channel.forEach(client => {
+      client.send(JSON.stringify({ message: message, username: username, messageId: Date.now()}))
+    });
+  }
 }
 
 function onMessage(clientSocket: WebSocket, message: Message) {

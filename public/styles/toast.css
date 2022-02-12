@@ -1,0 +1,8 @@
+.toast {
+    background: black;
+    z-index: 5;
+}
+
+#toastWrapper {
+    z-index: 6;
+}

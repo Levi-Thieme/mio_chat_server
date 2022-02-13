@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<head>
+    <title>My Account</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- client side form validation for the myAccount page-->
+    <script type="text/javascript" src="account.js"></script>
+     <!-- Custom styling -->
+    <link rel="stylesheet" href="common.css">
+    <!-- Custom styling -->
+    <link rel="stylesheet" href="account.css">
+    
+    
+</head>
+<html lang="en">
+    <body style="background-color: #222;">
+        
+        <div id="profileContainer" class="fluid-container">
+            <div class="well well-sm" style="background-color: #333; color: white; border: none;">
+                <div class="row" id="profileRowDiv">
+                    <img class="img-fluid" alt="The user's profile image" src="user.png">
+                    <a href="/home" id="backBtn" class="btn btn-primary" value="Back to My Chats">Back to My Chats</a>
+                    <a href="/login" id = "logoutButton" name = "logout" class = "btn btn-primary" type="submit">Log out</a>
+                    <div>
+                        
+                    </div>
+                    <div>
+                </div>
+            </div>
+        </div>
+        <form onsubmit="return validateChangeEmail()" method="post" id="changeEmailForm" name="changeEmailForm" class="change-form col-md-4 col-md-offset-4">
+            <div class="well well-lg" style="background-color: #333; color: white; border: none;">
+                <div class="form-group">
+                    <label for="updateEmailEmailInput">Update Email address</label>
+                    <input type="email" class="form-control" id="updateEmailEmailInput" name="emailInput" aria-describedby="emailHelp" placeholder="Enter new email">
+                    <label for="updateEmailPasswordInput">Password</label>
+                    <input type="password" class="form-control" id="updateEmailPasswordInput" name="updateEmailPasswordInput" placeholder="Password">
+                    <button type="submit" id="updateEmailButtton" name="updateEmailSubmit" class="btn btn-primary">Update Email</button>
+                </div>
+            </div>
+        </form>
+        <form onsubmit="return validateUpdatePassword()" method="post" id="changePasswordForm" name="changePasswordForm" class="change-form col-md-4 col-md-offset-4">
+            <div class="well well-lg" style="background-color: #333; color: white; border: none;">
+                <div class="form-group">
+                    <label for="updatePasswordPasswordInput">Update Password</label>
+                    <input type="password" class="form-control" id="updatePasswordPasswordInput" name="updatePasswordPasswordInput" placeholder="Enter old password">
+                </div>
+                <div class="form-group">
+                    <label for="newPassword newPasswordConfirm">Password</label>
+                    <input type="password" class="form-control" id="newPassword" name="newPassword" placeholder="New password">
+                    <input type="password" class="form-control" id="newPasswordConfirm" name="newPasswordConfirm" placeholder="Confirm new password">
+                    <button id="updatePasswordBtn" name="updatePasswordSubmit" type="submit" class="btn btn-primary">Update Password</button>
+                </div>
+            </div>
+        </form>
+        <form onsubmit="return validateDeleteAccount()" method="post" id="deleteAccountForm" name="deleteAccountForm" class="change-form col-md-4 col-md-offset-4">
+            <div class="well" style="background-color: #333; color: white; border: none;">
+                <div class="form-group">
+                    <strong>Delete My Account</strong>
+                    <input type="username" class="form-control" id="deleteUsername" name="deleteUsername" placeholder="Username">
+                    <input type="password" class="form-control" id="deletePassword" name="deletePassword" placeholder="Password">
+                    <input type="password" class="form-control" id="deletePasswordConfirm" name="deletePasswordConfirm" placeholder="Confirm Password">
+                    <label>Confirm Deletion <input type="checkbox" id="confirmDeleteCheckbox" name="confirmDeleteCheckbox"></label><br>
+                    <button id="deleteAccountBtn" name="deleteAccountSubmit" type="submit" class="btn btn-primary" role="button">Delete Account</button>
+                </div>
+            </div>
+        </form>
+    </body>
+</html>
+</html>

@@ -10,27 +10,29 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <!-- Latest compiled JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="login.js" type="module"></script>
         <!-- Custom styling -->
         <link rel="stylesheet" href="common.css">
         <link rel="stylesheet" href="login.css">
     </head>
     <body style="background-color: #222;">
-        <form id=loginform name="loginForm" class="change-form" action="login" method="post">
+        <form id=loginform name="loginForm" class="change-form">
             <div class="well-lg" style="background-color: #333; color: white; border: none;">
-                <h2>Mio Login Page</h2><br>
+                <h2>Mio Login Page</h2>
+                
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" name="username" class="form-control" id="username" placeholder="Enter username">
+                    <input type="text" autocomplete="username" id="username" name="username" class="form-control" placeholder="Enter username">
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" name="password" class="form-control" id="password" placeholder="Password">
+                    <input type="password" autocomplete="current-password" id="password" name="password" class="form-control" placeholder="Password">
                 </div>
                 <input type="submit" class="btn btn-primary" value="Login">
-                <div id="errorMessage" style="color: red"></div>
                 <div>
                     <a href="signup.html">Don't Already Have An Account? Signup Here!</a>
                 </div>
+                <div id="errorMessage" style="color: red"></div>
             </div>
         </form>
     </body>

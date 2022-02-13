@@ -7,6 +7,29 @@
     margin: 1% auto;
     background-color: #f79824;
     color: black;
+    border: none;
+}
+
+.well .well-lg {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    min-width: 400px;
+    background-color: #333;
+}
+
+.change-form {
+    text-align: center;
+    width: 50%;
+    margin-top: 10%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.centered {
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .fa.hover {
@@ -17,6 +40,17 @@
     float: right;
 }
 
-.body {
+body {
    background: #222;
+}
+
+.form-group {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.form-control {
+    text-align: center;
+    margin: 1%;
 }

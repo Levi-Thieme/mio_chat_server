@@ -28,16 +28,14 @@
                     <a href="/home" id="backBtn" class="btn btn-primary" value="Back to My Chats">Back to My Chats</a>
                     <a href="/login" id = "logoutButton" name = "logout" class = "btn btn-primary" type="submit">Log out</a>
                     <div>
-                        
-                    </div>
-                    <div>
                 </div>
             </div>
         </div>
-        <form onsubmit="return validateChangeEmail()" method="post" id="changeEmailForm" name="changeEmailForm" class="change-form col-md-4 col-md-offset-4">
+        <form onsubmit="return validateChangeEmail()" method="post" id="changeEmailForm" name="changeEmailForm" class="col-md-4 col-md-offset-4">
             <div class="well well-lg" style="background-color: #333; color: white; border: none;">
                 <div class="form-group">
-                    <label for="updateEmailEmailInput">Update Email address</label>
+                    <strong><u>Update Email Address</u></strong><br><br>
+                    <label for="updateEmailEmailInput">Email address</label>
                     <input type="email" class="form-control" id="updateEmailEmailInput" name="emailInput" aria-describedby="emailHelp" placeholder="Enter new email">
                     <label for="updateEmailPasswordInput">Password</label>
                     <input type="password" class="form-control" id="updateEmailPasswordInput" name="updateEmailPasswordInput" placeholder="Password">
@@ -45,26 +43,31 @@
                 </div>
             </div>
         </form>
-        <form onsubmit="return validateUpdatePassword()" method="post" id="changePasswordForm" name="changePasswordForm" class="change-form col-md-4 col-md-offset-4">
+        <form onsubmit="return validateUpdatePassword()" method="post" id="changePasswordForm" name="changePasswordForm" class="col-md-4 col-md-offset-4">
             <div class="well well-lg" style="background-color: #333; color: white; border: none;">
                 <div class="form-group">
-                    <label for="updatePasswordPasswordInput">Update Password</label>
+                    <strong><u>Update Password</u></strong><br><br>
+                    <label for="updatePasswordPasswordInput">Current Password</label>
                     <input type="password" class="form-control" id="updatePasswordPasswordInput" name="updatePasswordPasswordInput" placeholder="Enter old password">
                 </div>
                 <div class="form-group">
-                    <label for="newPassword newPasswordConfirm">Password</label>
+                    <label for="newPassword">New Password</label>
                     <input type="password" class="form-control" id="newPassword" name="newPassword" placeholder="New password">
+                    <label for="newPasswordConfirm">Confirm New Password</label>
                     <input type="password" class="form-control" id="newPasswordConfirm" name="newPasswordConfirm" placeholder="Confirm new password">
                     <button id="updatePasswordBtn" name="updatePasswordSubmit" type="submit" class="btn btn-primary">Update Password</button>
                 </div>
             </div>
         </form>
-        <form onsubmit="return validateDeleteAccount()" method="post" id="deleteAccountForm" name="deleteAccountForm" class="change-form col-md-4 col-md-offset-4">
-            <div class="well" style="background-color: #333; color: white; border: none;">
+        <form onsubmit="return validateDeleteAccount()" method="post" id="deleteAccountForm" name="deleteAccountForm" class="col-md-4 col-md-offset-4">
+            <div class="well well-lg" style="background-color: #333; color: white; border: none;">
                 <div class="form-group">
-                    <strong>Delete My Account</strong>
+                    <strong><u>Delete Account</u></strong><br><br>
+                    <label for="deleteUsername">Username</label>
                     <input type="username" class="form-control" id="deleteUsername" name="deleteUsername" placeholder="Username">
+                    <label for="deletePassword">Password</label>
                     <input type="password" class="form-control" id="deletePassword" name="deletePassword" placeholder="Password">
+                    <label for="deletePasswordConfirm">Confirm Password</label>
                     <input type="password" class="form-control" id="deletePasswordConfirm" name="deletePasswordConfirm" placeholder="Confirm Password">
                     <label>Confirm Deletion <input type="checkbox" id="confirmDeleteCheckbox" name="confirmDeleteCheckbox"></label><br>
                     <button id="deleteAccountBtn" name="deleteAccountSubmit" type="submit" class="btn btn-primary" role="button">Delete Account</button>

@@ -1,6 +1,7 @@
 import express from "express";
 import path from "path";
 import UserController from "../controllers/user";
+import { UserCredentials } from "../models/user";
 
 const router = express.Router();
 const userController = new UserController();
@@ -26,12 +27,19 @@ router.post("/signup", (req, res) => {
 });
 
 router.post("/login", (req, res) => {
-    if (userController.login()) {
-        res.redirect("/home");
+    try {
+        const credentials: UserCredentials = req.body;
+        const user = userController.login(credentials);
+        if (user) {
+            res.json(user);
+        }
+        else {
+            const forbidden = 403;
+            res.sendStatus(forbidden);
+        }
     }
-    else {
-        const forbiddenStatus = 403;
-        res.sendStatus(forbiddenStatus);
+    catch (error) {
+        res.sendStatus(500);
     }
 })
 

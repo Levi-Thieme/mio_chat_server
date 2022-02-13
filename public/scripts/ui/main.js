@@ -1,29 +1,7 @@
-import { createSocket, setSocket, sendMessage } from "./socket.js";
-
-/*
-Sends the user's message to main.php through AJAX
-*/
-function saveMessage() {
-    let message = $("#message").val();
-    if (message.trim() === "") {
-        return;
-    }
-    let roomName = $("#roomName").val();
-    if (roomName !== "") {
-        $.ajax({
-            type: "POST",
-            async: true,
-            url: "../message/storeMessage.php",
-            dataType: "JSON",
-            data: {
-                message: "" + message + "", 
-                currentRoom: "" + roomName + "", 
-            },
-            failure: function(data) { console.log("Failed to send message: " + message); }
-        });
-        $("#message").val("");
-    }
-}
+import { createSocket, setSocket, sendMessage as sendSocketMessage } from "./socket.js";
+import { setState as setChatState, getState as getChatState } from "./chatState.js";
+import { getState as getUserState } from "./userState.js";
+import { timestamp } from "./dateTimeUtils.js";
 
 /*
 Appends a message div into the chat
@@ -46,8 +24,7 @@ export function displayMessage(message, classStyle, time, id, name) {
 Clears the inputs for room name and id
 */
 export function clearRoom() {
-    $("#roomName").val("");
-    $("#roomId").val("");
+    setChatState({ chatId: "", chatName: "" });
 }
 
 /*
@@ -66,39 +43,48 @@ $(document).ready(function() {
     setSocket(websocket);
 
     //Sends the username, channel, and message through websocket
-    function sendMessageWithUserInfo() {
-        let message = $("#message").val().trim();
-        if (message === "") {
+    function sendMessage() {
+        const { userId, username } = getUserState();
+        const { chatId, chatName, message } = getChatState();
+        const normalizedMessage = message.trim();
+        if (normalizedMessage === "") {
             return;
         }
-        let clientId = $("#userId").val();
-        let roomId = $("#roomId").val();
-        let username = $("#username").val();
-        let roomName = $("#roomName").val();
-        if (clientId == "" || username == "" || roomId == "" || roomName == "") {
+        if (userId == "" || username == "" || chatId == "" || chatName == "") {
             displayErrorMessage("User id, username, or roomName is not set. Unable to send your message.");
             return;
         }
-        let userInfo = {
+        let socketMessage = {
             action: "message",
-            clientId: clientId,
+            clientId: userId,
             username: username,
-            channelId: roomId,
-            channelName: roomName,
-            message: message
+            channelId: chatId,
+            channelName: chatName,
+            message: normalizedMessage
         };
-        if (sendMessage(userInfo)) {
-            $("#message").val("");
+        if (sendSocketMessage(socketMessage)) {
+            setChatState({ message: "" });
+            return true;
         } else {
             handleSendMessageFailure();
+            return false;
         }
     }
-    $("#sendMessageButton").on("click", sendMessageWithUserInfo);
-    //Add enter button listener for message input
+    $("#sendMessageButton").on("click", (event) => {
+        if (sendMessage()) {
+            $("#message").val("");
+        }
+    });
     $("#message").on("keyup", function(event) {
         event.preventDefault();
         if (event.keyCode === 13) {
-            sendMessageWithUserInfo();
+            if (sendMessage()) {
+                $("#message").val("");
+            }
+        }
+        else {
+            const message = event.target.value;
+            setChatState({ message: message.trim() });
         }
     });
 });

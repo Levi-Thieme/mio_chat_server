@@ -1,25 +1,30 @@
 import { Login, authenticate } from "./loginService.js";
+import { setState as setUserState } from "./userState.js";
 
 $(document).ready(function() {
     $('#loginform').on('submit', async (e) => {
-        e.preventDefault();
-        const login = getLogin();
-        if (isValidLogin(login)) {
-            try {
-                const response = await authenticate(login);
-                if (response.status !== 200) {
-                    throw Error("Your username or password were invalid.");
-                }
-                if (response.redirected) {
-                    window.location = response.url;
-                }
+        try {
+            showErrorMessage("");
+            e.preventDefault();
+            const login = getLogin();
+            validateLogin(login);
+            const response = await authenticate(login);
+            if (response.invalidCredentials) {
+                throw new Error("Incorrect username or password");
             }
-            catch (error) {
-                showErrorMessage(error);
+            else if (response.serverError) {
+                throw new Error("An error occurred. Please try again.");
             }
-        } else {
-            showErrorMessage("You must fill out the username and password fields.");
+            else {
+                setUserState(response.user);
+                //TODO: extract to a client-side routing service
+                window.location.href = "/home";
+            }
         }
+        catch (error) {
+            showErrorMessage(error.message);
+        }
+        
     })
 });
 
@@ -31,8 +36,13 @@ function getLogin() {
  * 
  * @param {Login} login 
  */
-function isValidLogin(login) {
-    return login.username && login.username.length > 0 && login.password && login.password.length > 0;
+function validateLogin(login) {
+    if (login.username.length === 0) {
+        throw new Error("Enter your username");
+    }
+    else if (login.password.length === 0) {
+        throw new Error("Enter your password");
+    }
 }
 
 function showErrorMessage(error) {

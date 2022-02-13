@@ -1,3 +1,5 @@
+import { UserState } from "./userState.js";
+
 export class Login {
     /**
      * @param {string} username 
@@ -9,10 +11,24 @@ export class Login {
     }
 }
 
+export class LoginResponse {
+    /**
+     * 
+     * @param {boolean} invalidCredentials 
+     * @param {boolean} serverError 
+     * @param {UserState} user 
+     */
+    constructor(invalidCredentials, serverError = false, user = null) {
+        this.invalidCredentials = invalidCredentials;
+        this.serverError = serverError;
+        this.user = user;
+    }
+}
+
 /**
  * 
  * @param {Login} login 
- * @returns {Promise<Response>}
+ * @returns {Promise<LoginResponse>}
  */
 export async function authenticate(login) {
     const response = await fetch("/login", {
@@ -22,5 +38,16 @@ export async function authenticate(login) {
         },
         body: JSON.stringify(login)
     });
-    return response;
+    if (response.ok) {
+        const userInfo = await response.json();
+        const user = new UserState(userInfo.id, userInfo.username, userInfo.email);
+        return new LoginResponse(false, false, user);
+    }
+    else if (response.status === 403) {
+        return new LoginResponse(true, false);
+    }
+    else {
+        return new LoginResponse(false, true);
+    }
+    
 }

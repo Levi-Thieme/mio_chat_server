@@ -1,4 +1,7 @@
 import { displayMessage, displayErrorMessage } from "./main.js";
+import { dateTimestamp } from "./dateTimeUtils.js";
+import { getState as getUserState } from "./userState.js";
+import { getState as getChatState } from "./chatState.js";
 
 let websocket = null;
 let remoteSocketUrl = "ws://mio-chat-server.herokuapp.com/index.js";
@@ -32,43 +35,21 @@ export function sendMessage(message) {
 }
 
 function onOpen() {
+    const { userId, username } = getUserState();
+    const { chatId, chatName } = getChatState();
     let userInfo = {
         action: "JoinChannel",
-        clientId : $("#userId").val(),
-        username: $("#username").val(),
-        channelId: $("#roomId").val(),
-        channelName: $("#roomName").val()
+        clientId : userId,
+        username: username,
+        channelId: chatId,
+        channelName: chatName
     };
     websocket.send(JSON.stringify(userInfo));
 }
 
-function dateTimestamp() {
-    return currentDate(true) + " " + timestamp();
-}
-
-//return date in weekDay? MM DD, YYYY
-function currentDate(includeWeekday) {
-    let date = new Date();
-    let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    let day = includeWeekday ? days[date.getDay()] : "";
-    return day + " " + months[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear();
-}
-
-//returns time in HH:MM:SS format
-function timestamp() {
-    let date = new Date();
-    let hour = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
-    let minutes = date.getMinutes();
-    minutes = minutes < 10 ? "0" + minutes : minutes;
-    let seconds = date.getSeconds();
-    seconds = seconds < 10 ? "0" + seconds : seconds;
-    return hour + ":" + minutes + ":" + seconds;
-}
-
 function onMessage(event) {
     let data = JSON.parse(event.data);
-    let username = $("#username").val();
+    const { username } = getUserState();
     let senderId = data["username"];
     if (senderId === username) {
         displayMessage(data["message"], "self", dateTimestamp(), data["messageId"], data["username"]);

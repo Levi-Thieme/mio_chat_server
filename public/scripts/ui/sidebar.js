@@ -1,10 +1,11 @@
 import { getChatsByUser } from "./chatService.js";
 import { clearRoom, clearMessages } from "./main.js";
 import { sendMessage } from "./socket.js";
+import { setState as setChatState, getState as getChatState} from "./chatState.js";
+import { getState as getUserState } from "./userState.js";
 
 function joinRoom(userId, username, channelId, channelName) {
-    document.getElementById("roomId").value = channelId;
-    document.getElementById("roomName").value = channelName;
+    setChatState({ chatId: channelId, chatName: channelName });
     let message = {
         action: "JoinChannel",
         clientId: userId,
@@ -17,17 +18,7 @@ function joinRoom(userId, username, channelId, channelName) {
 }
 
 function removeRoom(userId, channelId) {
-    $.ajax({
-        url: controllersPath + "roomHandler.php",
-        type: "GET",
-        async: true,
-        data: {
-            request: "removeRoom",
-            clientId: userId,
-            channelId: channelId
-        },
-        datatype: "JSON"
-    });
+    console.log(`${userId} is removing ${channelId}`);
 }
 
 function leaveRoom(userId, channelId, username, onSuccess, onFailure) {
@@ -94,7 +85,9 @@ function createRoomDiv(roomId, roomName) {
 }
 
 //Refreshes the room list
-async function refreshRoomList(userId) {
+async function refreshRoomList() {
+    const { userId, username } = getUserState();
+    const { chatId } = getChatState();
     const chats = await getChatsByUser(userId);
     let roomList = document.getElementById("roomList");
     while (roomList.firstChild) {
@@ -103,7 +96,7 @@ async function refreshRoomList(userId) {
     let roomNotSelected = true;
     chats.forEach((room)=> {
         let roomDiv = createRoomDiv(room.id, room.name);
-        if (room.id === $("#roomId").val()) {
+        if (room.id === chatId) {
             roomDiv.classList.add("active");
             roomNotSelected = false;
         }
@@ -111,9 +104,7 @@ async function refreshRoomList(userId) {
     });
     if (roomList.children.length > 0 && roomNotSelected) {
         let room = roomList.firstChild;
-        joinRoom($("#userId").val(), $("#username").val(), room.dataset.roomId, room.dataset.roomName);
-        $("#roomId").val(room.dataset.roomId);
-        $("#roomName").val(room.dataset.roomName);
+        joinRoom(userId, username, room.dataset.roomId, room.dataset.roomName);
         room.classList.add("active");
     }
 }
@@ -199,20 +190,20 @@ $(document).ready(function() {
     //refresh rooms list when the room collapse is opened
     $("#toggleRoomsCollapse").on("click", () => {
         if (!$("#roomCollapse").hasClass("show")) {
-            refreshRoomList($("#userId").val());
+            refreshRoomList();
         }
     });
 
     //Event Listener for room divs and their icons
     let roomList = document.getElementById("roomList");
     roomList.addEventListener("click", function(event) {
-        let userId = document.getElementById("userId").value;
-        let username = document.getElementById("username").value;
+        const { userId, username } = getUserState();
+        
         let clickedElement = event.target;
         if ("moveToRoom" in clickedElement.dataset) {
             let roomId = clickedElement.dataset.roomId;
             let roomName = clickedElement.dataset.roomName;
-            let currentRoomId = document.getElementById("roomId").value;
+            let currentRoomId = getChatState().chatId;
             if (roomId != currentRoomId) {
                 //if the client is currently in a room, then remove them
                 if (currentRoomId) {
@@ -233,7 +224,6 @@ $(document).ready(function() {
                 removeRoom(userId, channelIdToRemove);
                 
                 if (roomList.children.length > 0) {
-                    let username = document.getElementById("username").value;
                     let firstRoom = roomList.firstChild;
                     let roomId = firstRoom.dataset.roomId;
                     let roomName = firstRoom.dataset.roomName;
@@ -247,13 +237,13 @@ $(document).ready(function() {
     //refresh friends list when the friends collapse is opened
     $("#toggleFriendsCollapse").on("click", () => {
         if (!$("#friendsCollapse").hasClass("show")) {
-            refreshFriendsList($("#userId").val());
+            refreshFriendsList();
         }
     });
     //Event listener for friends list elements icons
     $("#friendsCollapse").on("click", function(event) {
         let src = event.target;
-        let userId = $("#userId").val();
+        const { userId } = getUserState();
         if ("deleteFriend" in src.dataset) {
             const name = src.parentElement.innerText;
             if (confirm("Are you sure you want to unfriend " + name + "?")) {
@@ -276,6 +266,7 @@ $(document).ready(function() {
         }
     });
 
+    refreshRoomList();
 });
 
 //removes className from node's children

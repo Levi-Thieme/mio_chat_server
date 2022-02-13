@@ -3,6 +3,7 @@ import { Server, WebSocket } from "ws";
 import path from "path";
 import accountRoutes from "./routes/account"
 import homeRoutes from "./routes/home";
+import chatRoutes from "./routes/chat";
 
 const PORT = process.env.PORT || 3000;
 
@@ -14,7 +15,8 @@ const app: Application = express()
   .use(express.static(path.join(__dirname, './public/imgs')))
   .use(express.json())
   .use("/", accountRoutes)
-  .use("/", homeRoutes);
+  .use("/", homeRoutes)
+  .use("/", chatRoutes);
 
 
 const server = app.listen(PORT, () => console.log(`Listening on ${PORT}`));

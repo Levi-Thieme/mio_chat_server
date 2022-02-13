@@ -1,3 +1,6 @@
+import { getChatsByUser } from "./chatService.js";
+import { clearRoom, clearMessages } from "./main.js";
+import { sendMessage } from "./socket.js";
 
 function joinRoom(userId, username, channelId, channelName) {
     document.getElementById("roomId").value = channelId;
@@ -91,41 +94,28 @@ function createRoomDiv(roomId, roomName) {
 }
 
 //Refreshes the room list
-function refreshRoomList(userId) {
-    $.ajax({
-        type: "GET",
-        url: controllersPath + "/roomHandler.php",
-        async: true,
-        data: {
-            request: "getRooms",
-            userId: userId
-        },
-        success: function(data) {
-            let roomList = document.getElementById("roomList");
-            while (roomList.firstChild) {
-                roomList.removeChild(roomList.firstChild);
-            }
-            let rooms = JSON.parse(data);
-            let roomNotSelected = true;
-            rooms.forEach((room)=> {
-                let roomDiv = createRoomDiv(room.id, room.name);
-                if (room.id === $("#roomId").val()) {
-                    roomDiv.classList.add("active");
-                    roomNotSelected = false;
-                }
-                roomList.append(roomDiv);
-                roomDiv.parentNode = roomList;
-            });
-            if (roomList.children.length > 0 && roomNotSelected) {
-                let room = roomList.firstChild;
-                joinRoom($("#userId").val(), $("#username").val(), room.dataset.roomId, room.dataset.roomName);
-                $("#roomId").val(room.dataset.roomId);
-                $("#roomName").val(room.dataset.roomName);
-                room.classList.add("active");
-            }
-        },
-        failure: function(data) { alert("Unable to load room list."); },
+async function refreshRoomList(userId) {
+    const chats = await getChatsByUser(userId);
+    let roomList = document.getElementById("roomList");
+    while (roomList.firstChild) {
+        roomList.removeChild(roomList.firstChild);
+    }
+    let roomNotSelected = true;
+    chats.forEach((room)=> {
+        let roomDiv = createRoomDiv(room.id, room.name);
+        if (room.id === $("#roomId").val()) {
+            roomDiv.classList.add("active");
+            roomNotSelected = false;
+        }
+        roomList.append(roomDiv);
     });
+    if (roomList.children.length > 0 && roomNotSelected) {
+        let room = roomList.firstChild;
+        joinRoom($("#userId").val(), $("#username").val(), room.dataset.roomId, room.dataset.roomName);
+        $("#roomId").val(room.dataset.roomId);
+        $("#roomName").val(room.dataset.roomName);
+        room.classList.add("active");
+    }
 }
 
 //Deletes a friend

@@ -1,5 +1,4 @@
-//Relative path to the controllers directory
-var controllersPath = "../controllers/";
+import { createSocket, setSocket, sendMessage } from "./socket.js";
 
 /*
 Sends the user's message to main.php through AJAX
@@ -29,7 +28,7 @@ function saveMessage() {
 /*
 Appends a message div into the chat
 */
-function displayMessage(message, classStyle, time, id, name) {
+export function displayMessage(message, classStyle, time, id, name) {
     if (message !== "")  {
         let messageItem =
         '<li id ="'+id+'" class="'+classStyle+'">'+
@@ -42,27 +41,29 @@ function displayMessage(message, classStyle, time, id, name) {
     }
 }
 
-/*
-Clears the chat's messages
-*/
-function clearMessages() {
-    $("#messageList").html("");
-}
 
 /*
 Clears the inputs for room name and id
 */
-function clearRoom() {
+export function clearRoom() {
     $("#roomName").val("");
     $("#roomId").val("");
 }
 
-function displayErrorMessage(message) {
+/*
+Clears the chat's messages
+*/
+export function clearMessages() {
+    $("#messageList").html("");
+}
+
+export function displayErrorMessage(message) {
     displayToast("Error", message);
 }
 
 $(document).ready(function() {
-    websocket = createSocket();
+    const websocket = createSocket();
+    setSocket(websocket);
 
     //Sends the username, channel, and message through websocket
     function sendMessageWithUserInfo() {

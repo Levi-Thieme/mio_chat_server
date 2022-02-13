@@ -1,4 +1,6 @@
-var websocket;
+import { displayMessage, displayErrorMessage } from "./main.js";
+
+let websocket = null;
 let remoteSocketUrl = "ws://mio-chat-server.herokuapp.com/index.js";
 //websocket readyState constants
 let CONNECTING = 0;
@@ -7,10 +9,26 @@ let CLOSING = 2;
 let CLOSED = 3;
 //end websocket readyState constants
 
-function createSocket() {
+export function createSocket() {
     let socket = new WebSocket(remoteSocketUrl);
     initializeSocketEventHandlers(socket);
     return socket;
+}
+
+export function setSocket(socket) {
+    websocket = socket;
+}
+
+/*
+ * Sends message to websocket.
+ * Returns true if the message was successfully sent, else false.
+ */
+export function sendMessage(message) {
+    if (websocket != null && websocket.readyState === OPEN) {
+        websocket.send(JSON.stringify(message));
+        return true;
+    }
+    return false;
 }
 
 function onOpen() {
@@ -85,18 +103,6 @@ function handleSendMessageFailure() {
     else if (websocket.readyState === CONNECTING) {
         displayErrorMessage("Currently Connecting to the server.");
     }
-}
-
-/*
- * Sends message to websocket.
- * Returns true if the message was successfully sent, else false.
- */
-function sendMessage(message) {
-    if (websocket != null && websocket.readyState === OPEN) {
-        websocket.send(JSON.stringify(message));
-        return true;
-    }
-    return false;
 }
 
 function sendFriendRequestNotification(fromUsername, toUsername) {

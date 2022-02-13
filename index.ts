@@ -1,6 +1,7 @@
-import express, { Application, Request, Response } from "express";
+import express, { Application, Request, Response, Router } from "express";
 import { Server, WebSocket } from "ws";
 import path from "path";
+import userRoutes from "./routes/user"
 
 const PORT = process.env.PORT || 3000;
 
@@ -9,8 +10,11 @@ const PORT = process.env.PORT || 3000;
 const app: Application = express()
   .use(express.static(path.join(__dirname, './public/views')))
   .use(express.static(path.join(__dirname, './public/styles')))
-  .use(express.static(path.join(__dirname, './public/scripts')))
-  .use(express.static(path.join(__dirname, './public/imgs')));
+  .use(express.static(path.join(__dirname, './public/scripts/lib')))
+  .use(express.static(path.join(__dirname, './public/scripts/ui')))
+  .use(express.static(path.join(__dirname, './public/imgs')))
+  .use(express.json())
+  .use("/", userRoutes);
 
 
 const server = app.listen(PORT, () => console.log(`Listening on ${PORT}`));

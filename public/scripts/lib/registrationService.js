@@ -1,3 +1,4 @@
+import { UserState } from "./userState.js";
 
     export class Registration {
         /**
@@ -27,6 +28,22 @@
             this.error = error;
         }
     }
+
+    export class RegistrationResult {
+        /**
+         * 
+         * @param {boolean} success 
+         * @param {boolean} invalidCredentials
+         * @param {boolean} serverError
+         * @param {UserState} registeredUser
+         */
+        constructor(success, invalidCredentials, serverError, registeredUser) {
+            this.success = success;
+            this.invalidCredentials = invalidCredentials;
+            this.serverError = serverError;
+            this.user = registeredUser;
+        }
+    }
     
     /**
      * 
@@ -41,7 +58,16 @@
             },
             body: JSON.stringify(registration)
         });
-        return response;
+
+        if (response.ok) {
+            return new RegistrationResult(true, false, false, await response.json());
+        }
+        else if (response.status === 400) {
+            return new RegistrationResult(false, true, false, null);
+        }
+        else {
+            return new RegistrationResult(false, false, true, null);
+        }
     }
     
     /**

@@ -7,9 +7,15 @@ import { isRegistrationValid, signup, Registration } from "./registrationService
             try {
                 const registrationValidationResult = isRegistrationValid(registration);
                 if (registrationValidationResult.success) {
-                    const response = await signup(e);
-                    if (response.redirected) {
-                        window.location = response.url;
+                    const response = await signup(registration);
+                    if (response.success) {
+                        window.location.href = "/login";
+                    }
+                    else if (response.invalidCredentials) {
+                        throw new Error("A user already exists with that username");
+                    }
+                    else if (response.serverError) {
+                        throw new Error("An error occurred. Please try again.");
                     }
                 }
                 else {

@@ -12,7 +12,7 @@ export class User {
     }
 }
 
-export type DbUser = UserRegistration & UserCredentials & { _id: ObjectId, salt: string };
+export type DbUser = UserRegistration & UserCredentials & { _id: ObjectId };
 
 export type UserRegistration = {
     username: string,

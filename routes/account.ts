@@ -25,7 +25,13 @@ router.post("/signup", async (req, res) => {
     try {
         const registration: UserRegistration = req.body;
         const registeredUser: User | null = await userController.createUser(registration);
-        res.json(registeredUser);
+        if (registeredUser) {
+            res.json(registeredUser);
+        }
+        else {
+            const userAlreadyExists: number = 400;
+            res.sendStatus(userAlreadyExists);
+        }
     }
     catch (error) {
         res.sendStatus(500);

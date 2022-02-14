@@ -1,9 +1,12 @@
+import dotenv from 'dotenv'
+dotenv.config()
 import express, { Application, Request, Response, Router } from "express";
 import { Server, WebSocket } from "ws";
 import path from "path";
 import accountRoutes from "./routes/account"
 import homeRoutes from "./routes/home";
 import chatRoutes from "./routes/chat";
+
 
 const PORT = process.env.PORT || 3000;
 

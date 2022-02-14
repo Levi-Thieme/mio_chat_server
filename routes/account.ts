@@ -1,7 +1,7 @@
 import express from "express";
 import path from "path";
 import UserController from "../controllers/user";
-import { UserCredentials } from "../models/user";
+import { User, UserCredentials, UserRegistration } from "../models/user";
 
 const router = express.Router();
 const userController = new UserController();
@@ -21,15 +21,21 @@ router.get("/account", (req, res) => {
     res.sendFile(url);
 });
 
-router.post("/signup", (req, res) => {
-    userController.createUser();
-    res.redirect("/login");
+router.post("/signup", async (req, res) => {
+    try {
+        const registration: UserRegistration = req.body;
+        const registeredUser: User | null = await userController.createUser(registration);
+        res.json(registeredUser);
+    }
+    catch (error) {
+        res.sendStatus(500);
+    }
 });
 
-router.post("/login", (req, res) => {
+router.post("/login", async (req, res) => {
     try {
         const credentials: UserCredentials = req.body;
-        const user = userController.login(credentials);
+        const user = await userController.login(credentials);
         if (user) {
             res.json(user);
         }
